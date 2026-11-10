@@ -109,16 +109,16 @@ public:
 
 int main () {
 
-    // // Копирование объекта в объект
-    // Point *p1 = new Point();
-    // Point *p2 = new Point(2,5);
+    // Копирование объекта в объект
+    Point *p1 = new Point();
+    Point *p2 = new Point(2,5);
 
-    // *p1 = *p2;
+    *p1 = *p2;
 
-    // p2->move(4,4);
+    p2->move(4,4);
 
-    // delete p1;
-    // delete p2;
+    delete p1;
+    delete p2;
 
 
     // Копирование указателя в указатель
