@@ -61,7 +61,7 @@ public:
     }
     void getter() {
         std::cout << x << " " << y << " " << color << std::endl;
-        Point::getter();
+        // Point::getter(); // вызов в переопределённом методе потомка унаследованного метода предка
     };
 };
 
