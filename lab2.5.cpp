@@ -1,9 +1,9 @@
 #include <iostream>
 
-// Присваивание: помещение объектов в переменные различных типов
+// Переопределение методов в потомке (без virtual), вызов в переопределённом методе потомка унаследованного метода предка
 
 class Point {
-protected:
+    protected:
     int x, y;
 public:
     Point() {
@@ -11,10 +11,8 @@ public:
         x = 0;
         y = 0;
     }
-    Point(int x, int y) {
+    Point(int _x, int _y) : x(_x), y(_y) {
         std::cout << "Point(int x, int y)\n";
-        this->x = x;
-        this->y = y;
     }
     Point(const Point &p) {
         std::cout << "Point(const Point &p)\n";
@@ -22,7 +20,7 @@ public:
         y = p.y;
     }
     ~Point() {
-        std::cout << x << " " << y << std::endl;
+        // std::cout << x << " " << y << std::endl;
         std::cout << "~Point\n";
     }
     void move(int dx, int dy) {
@@ -30,6 +28,10 @@ public:
         y += dy;
     }
     void reset();
+
+    void getter() {
+        std::cout << x << " " << y << std::endl;
+    };
 };
 
 void Point::reset() {
@@ -41,35 +43,79 @@ class ColoredPoint: public Point {
 protected:
     int color;
 public:
-    ColoredPoint() : Point() {
+    ColoredPoint() : Point(), color(0) {
         std::cout << "ColoredPoint()\n";
-        color = 0;
     }
-    ColoredPoint(int x, int y, int color) : Point(x, y) {
+    ColoredPoint(int x, int y, int color) : Point(x, y), color(color) {
         std::cout << "ColoredPoint(int x, int y, int color)\n";
-        this->color = color;
     }
-    ColoredPoint(const ColoredPoint &p) {
+    ColoredPoint(const ColoredPoint &p) : color(p.color) {
         std::cout << "ColoredPoint(const Point &p)\n";
-        color = p.color;
     }
     ~ColoredPoint() {
-        std::cout << x << " " << y << " color: " << color << std::endl;
+        // std::cout << x << " " << y << " color: " << color << std::endl;
         std::cout << "~ColoredPoint\n";
     }
     void change_color(int new_color) {
         color = new_color;
     }
-    void reset();
+    void getter() {
+        std::cout << x << " " << y << " " << color << std::endl;
+        // Point::getter(); // вызов в переопределённом методе потомка унаследованного метода предка
+    };
+};
+
+class Section {
+protected:
+    Point *p1;
+    Point *p2;
+public:
+    Section() {
+        std::cout << "Section()\n";
+        p1 = new Point;
+        p2 = new Point;
+    }
+    Section(int x1, int y1, int x2, int y2) {
+        std::cout << "Section(int x, int y)\n";
+        p1 = new Point(x1, y1);
+        p2 = new Point(x2, y2);
+    }
+    Section(const Section &s) {
+        std::cout << "Section(const Section &s)\n";
+        p1 = new Point(*(s.p1));
+        p2 = new Point(*(s.p2));
+    }
+    ~Section() {
+        // std::cout << x << " " << y << std::endl;
+        delete p1;
+        delete p2;
+        std::cout << "~Section\n";
+    }
+};
+
+class Triangle {
+protected:
+    Point p1;
+    Point p2;
+    Point p3;
+public:
+    Triangle() : p1(Point()), p2(Point()), p3(Point()) {
+        std::cout << "Triangle()" << std::endl; 
+    }
+    ~Triangle() {
+        std::cout << "~Triangle()" << std::endl; 
+    }
 };
 
 int main () {
 
-    Point *p1 = new ColoredPoint(1, 2, 42);
-    ColoredPoint *p2 = new ColoredPoint(1, 2, 42);
+    // Point *p1 = new Point();
+    ColoredPoint *p2 = new ColoredPoint();
 
-    delete p1;
-    delete p2;
+    Point *p21 = p2;
+
+    p2->getter();
+    p21->getter();
 
     return 0;
 }

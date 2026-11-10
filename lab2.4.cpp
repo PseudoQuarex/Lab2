@@ -1,13 +1,9 @@
 #include <iostream>
 
-// Определения: методов, классов-наследников, доступности атрибутов и методов
-// Создание: объектов классов-наследников
-// Уничтожение: объектов классов-наследников
-// Реализация: методов объектов, методов объектов в определении или после
-
+// Инициализация полей класса в списке инициализации конструктора, композиции
 
 class Point {
-protected:
+    protected:
     int x, y;
 public:
     Point() {
@@ -15,10 +11,8 @@ public:
         x = 0;
         y = 0;
     }
-    Point(int x, int y) {
+    Point(int _x, int _y) : x(_x), y(_y) {
         std::cout << "Point(int x, int y)\n";
-        this->x = x;
-        this->y = y;
     }
     Point(const Point &p) {
         std::cout << "Point(const Point &p)\n";
@@ -26,7 +20,7 @@ public:
         y = p.y;
     }
     ~Point() {
-        std::cout << x << " " << y << std::endl;
+        // std::cout << x << " " << y << std::endl;
         std::cout << "~Point\n";
     }
     void move(int dx, int dy) {
@@ -34,6 +28,10 @@ public:
         y += dy;
     }
     void reset();
+
+    void getter() {
+        std::cout << x << " " << y << std::endl;
+    };
 };
 
 void Point::reset() {
@@ -45,41 +43,79 @@ class ColoredPoint: public Point {
 protected:
     int color;
 public:
-    ColoredPoint() : Point() {
+    ColoredPoint() : Point(), color(0) {
         std::cout << "ColoredPoint()\n";
-        color = 0;
     }
-    ColoredPoint(int x, int y, int color) : Point(x, y) {
+    ColoredPoint(int x, int y, int color) : Point(x, y), color(color) {
         std::cout << "ColoredPoint(int x, int y, int color)\n";
-        this->color = color;
     }
-    ColoredPoint(const ColoredPoint &p) {
+    ColoredPoint(const ColoredPoint &p) : color(p.color) {
         std::cout << "ColoredPoint(const Point &p)\n";
-        color = p.color;
     }
     ~ColoredPoint() {
-        std::cout << x << " " << y << " color: " << color << std::endl;
+        // std::cout << x << " " << y << " color: " << color << std::endl;
         std::cout << "~ColoredPoint\n";
     }
     void change_color(int new_color) {
         color = new_color;
     }
-    void reset();
+    void getter() {
+        std::cout << x << " " << y << " " << color << std::endl;
+    };
 };
-void ColoredPoint::reset() {
-    x = 0;
-    y = 0;
-    color = 0;
-}
+
+class Section {
+protected:
+    Point *p1;
+    Point *p2;
+public:
+    Section() {
+        std::cout << "Section()\n";
+        p1 = new Point;
+        p2 = new Point;
+    }
+    Section(int x1, int y1, int x2, int y2) {
+        std::cout << "Section(int x, int y)\n";
+        p1 = new Point(x1, y1);
+        p2 = new Point(x2, y2);
+    }
+    Section(const Section &s) {
+        std::cout << "Section(const Section &s)\n";
+        p1 = new Point(*(s.p1));
+        p2 = new Point(*(s.p2));
+    }
+    ~Section() {
+        // std::cout << x << " " << y << std::endl;
+        delete p1;
+        delete p2;
+        std::cout << "~Section\n";
+    }
+};
+
+class Triangle {
+protected:
+    Point p1;
+    Point p2;
+    Point p3;
+public:
+    Triangle() : p1(Point()), p2(Point()), p3(Point()) {
+        std::cout << "Triangle()" << std::endl; 
+    }
+    ~Triangle() {
+        std::cout << "~Triangle()" << std::endl; 
+    }
+};
 
 int main () {
 
-    ColoredPoint *p = new ColoredPoint(1, 2, 42);
+    Section *s1 = new Section();
+    Section *s2 = new Section(*s1);
 
-    p->reset();
-    p->move(10, 10);
+    Triangle *t1 = new Triangle(); // Сначала создаются объекты класса Point, потом Triangle. Удаление: Triangle, потом Point
 
-    delete p;
+    delete s1;
+    delete s2;
+    delete t1;
 
     return 0;
 }
