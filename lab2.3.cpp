@@ -40,8 +40,6 @@ void Point::reset() {
     y = 0;
 }
 
-
-
 int main () {
 
     Point *p = new Point(1,2);
