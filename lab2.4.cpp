@@ -28,10 +28,6 @@ public:
         y += dy;
     }
     void reset();
-
-    void getter() {
-        std::cout << x << " " << y << std::endl;
-    };
 };
 
 void Point::reset() {
@@ -59,9 +55,6 @@ public:
     void change_color(int new_color) {
         color = new_color;
     }
-    void getter() {
-        std::cout << x << " " << y << " " << color << std::endl;
-    };
 };
 
 class Section {
@@ -69,10 +62,10 @@ protected:
     Point *p1;
     Point *p2;
 public:
-    Section() {
+    Section(): p1(new Point()), p2(new Point()) {
         std::cout << "Section()\n";
-        p1 = new Point;
-        p2 = new Point;
+        // p1 = new Point;
+        // p2 = new Point;
     }
     Section(int x1, int y1, int x2, int y2) {
         std::cout << "Section(int x, int y)\n";
@@ -111,7 +104,7 @@ int main () {
     Section *s1 = new Section();
     Section *s2 = new Section(*s1);
 
-    Triangle *t1 = new Triangle(); // Сначала создаются объекты класса Point, потом Triangle. Удаление: Triangle, потом Point
+    Triangle *t1 = new Triangle();
 
     delete s1;
     delete s2;
